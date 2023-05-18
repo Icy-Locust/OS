@@ -25,7 +25,7 @@
 00000000000i[USBCTL] Pluggable USB devices
 00000000000i[USBCTL]   floppy mouse tablet keypad keyboard hub disk cdrom
 00000000000i[USBCTL]   printer
-00000000000i[MEM0  ] allocated memory at 0x7f49ec7dd010. after alignment, vector=0x7f49ec7de000
+00000000000i[MEM0  ] allocated memory at 0x7f91fefdd010. after alignment, vector=0x7f91fefde000
 00000000000i[MEM0  ] 32.00MB
 00000000000i[MEM0  ] mem block size = 0x00020000, blocks=256
 00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('/usr/share/bochs/BIOS-bochs-latest')
@@ -36,7 +36,7 @@
 00000000000i[DEV   ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[PLUGIN] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS  ] Using local time for initial clock
-00000000000i[CMOS  ] Setting initial clock to: Thu May 18 14:32:05 2023 (time0=1684391525)
+00000000000i[CMOS  ] Setting initial clock to: Thu May 18 14:45:44 2023 (time0=1684392344)
 00000000000i[PLUGIN] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA   ] channel 4 used by cascade
 00000000000i[PLUGIN] init_dev of 'pic' plugin device by virtual method
@@ -282,29 +282,26 @@
 00002331797i[BIOS  ] ata0-0: PCHS=121/16/63 translation=none LCHS=121/16/63
 00005765462i[BIOS  ] IDE time out
 00006036133i[BIOS  ] Booting from 0000:7c00
-00007547900i[XGUI  ] charmap update. Font is 9 x 16
-04077200000i[XGUI  ] Mouse capture on
-05532690464i[      ] Ctrl-C detected in signal handler.
-05532690465i[XGUI  ] Mouse capture off
-05532690465i[      ] Ctrl-C detected in signal handler.
-05532690465i[CPU0  ] CPU is in real mode (active)
-05532690465i[CPU0  ] CS.mode = 16 bit
-05532690465i[CPU0  ] SS.mode = 16 bit
-05532690465i[CPU0  ] EFER   = 0x00000000
-05532690465i[CPU0  ] | EAX=00001301  EBX=00000002  ECX=00090005  EDX=00001000
-05532690465i[CPU0  ] | ESP=00007c00  EBP=00007c33  ESI=000e0000  EDI=0000fdbc
-05532690465i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf SF zf af pf cf
-05532690465i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
-05532690465i[CPU0  ] |  CS:0000( 0004| 0|  0) 00000000 0000ffff 0 0
-05532690465i[CPU0  ] |  DS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05532690465i[CPU0  ] |  SS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05532690465i[CPU0  ] |  ES:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05532690465i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05532690465i[CPU0  ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05532690465i[CPU0  ] | EIP=00007c31 (00007c31)
-05532690465i[CPU0  ] | CR0=0x60000010 CR2=0x00000000
-05532690465i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
-05532690465d[PCI   ] Exit
-05532690465i[CMOS  ] Last time is 1684391635 (Thu May 18 14:33:55 2023)
-05532690465i[XGUI  ] Exit
-05532690465i[SIM   ] quit_sim called with exit code 1
+00007629050i[XGUI  ] charmap update. Font is 9 x 16
+00454478877i[      ] Ctrl-C detected in signal handler.
+00454478878i[CPU0  ] CPU is in real mode (active)
+00454478878i[CPU0  ] CS.mode = 16 bit
+00454478878i[CPU0  ] SS.mode = 16 bit
+00454478878i[CPU0  ] EFER   = 0x00000000
+00454478878i[CPU0  ] | EAX=00000600  EBX=00000700  ECX=00090000  EDX=0000184f
+00454478878i[CPU0  ] | ESP=00007c00  EBP=00000000  ESI=000e0000  EDI=0000fdbc
+00454478878i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf SF zf af pf cf
+00454478878i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
+00454478878i[CPU0  ] |  CS:0000( 0004| 0|  0) 00000000 0000ffff 0 0
+00454478878i[CPU0  ] |  DS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00454478878i[CPU0  ] |  SS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00454478878i[CPU0  ] |  ES:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00454478878i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00454478878i[CPU0  ] |  GS:b800( 0005| 0|  0) 000b8000 0000ffff 0 0
+00454478878i[CPU0  ] | EIP=00007c5c (00007c5c)
+00454478878i[CPU0  ] | CR0=0x60000010 CR2=0x00000000
+00454478878i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
+00454478878d[PCI   ] Exit
+00454478878i[CMOS  ] Last time is 1684392353 (Thu May 18 14:45:53 2023)
+00454478878i[XGUI  ] Exit
+00454478878i[SIM   ] quit_sim called with exit code 1
