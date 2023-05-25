@@ -1,5 +1,6 @@
 %include "boot.inc"
 SECTION MBR vstart=0x7c00
+mymbr db 'HCB in MBR'
 	mov ax,cs
 	mov ds,ax
 	mov es,ax
@@ -15,20 +16,17 @@ SECTION MBR vstart=0x7c00
 	mov dx,0x184f
 	int 0x10
 
-	mov byte [gs:0x00],'1'
-	mov byte [gs:0x01],0xA4
-	mov byte [gs:0x02],' '
-	mov byte [gs:0x03],0xA4
-	mov byte [gs:0x04],'M'
-	mov byte [gs:0x05],0xA4
-	mov byte [gs:0x06],'B'
-	mov byte [gs:0x07],0xA4
-	mov byte [gs:0x08],'R'
-	mov byte [gs:0x09],0xA4
+	mov sp,0x7c00
+	mov bp,mymbr
+	mov cx,10
+	mov ax,0x1301
+	mov bx,0x001f
+	mov dx,0x0000
+	int 0x10
 
 	mov eax,LOADER_START_SECTOR
 	mov bx,LOADER_BASE_ADDR
-	mov cx,1
+	mov cx,4
 	call rd_disk_m_16
 
 	jmp LOADER_BASE_ADDR
