@@ -55,7 +55,7 @@ static void idt_desc_init(void) {
 }
 
 static uint8_t count = 0;
-static const T_approx = 25;
+static const int T_approx = 100;
 static int times = T_approx;
 static void general_intr_handler(uint8_t vec_nr) {
 	if (times != 0) {
@@ -72,7 +72,6 @@ static void general_intr_handler(uint8_t vec_nr) {
 	put_int(vec_nr);
 	put_char('\n');
 }
-
 static void exception_init(void) {
 	int i;
 	for (i = 0; i < IDT_DESC_CNT; i++) {
