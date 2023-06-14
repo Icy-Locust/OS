@@ -4,7 +4,7 @@ ENTRY_POINT = 0xc0001500
 AS = nasm
 CC = gcc
 LD = ld
-LIB = -I lib/kernel -I lib/ -I kernel/
+LIB = -I lib/kernel -I lib/ -I kernel/ -I thread/
 ASLIB = -I $(BOOT)/include
 CFLAGS = -Wall -m32 -c -fno-builtin $(LIB) -fno-stack-protector
 ASFLAGS = -f elf $(ASLIB)
@@ -12,8 +12,14 @@ LDFLAGS = -Ttext $(ENTRY_POINT) -e main -m elf_i386
 BOOT_OBJS = $(BOOT)/mbr.bin $(BOOT)/loader.bin
 OBJS = $(BUILD)/main.o $(BUILD)/init.o $(BUILD)/interrupt.o $(BUILD)/kernel.o \
        $(BUILD)/print.o $(BUILD)/timer.o $(BUILD)/debug.o $(BUILD)/memory.o \
-       $(BUILD)/bitmap.o $(BUILD)/string.o
-all: hd boot 
+       $(BUILD)/bitmap.o $(BUILD)/string.o $(BUILD)/thread.o
+.PHONY: all mk_dir clean build boot hd
+all: mk_dir build hd
+mk_dir:
+	if [[ ! -d $(BUILD) ]];then mkdir $(BUILD);fi
+clean:
+	rm $(OBJS) $(BOOT_OBJS)
+build: $(BUILD)/kernel.bin $(BOOT_OBJS)
 boot: $(BOOT_OBJS)
 	dd if=$(BOOT)/mbr.bin of=hd60M.img \
 		bs=512 count=1 conv=notrunc
@@ -21,16 +27,15 @@ boot: $(BOOT_OBJS)
 		bs=512 seek=2 conv=notrunc
 hd: $(BUILD)/kernel.bin
 	dd if=$(BUILD)/kernel.bin of=hd60M.img \
-		bs=512 count=200 seek=9 conv=notrunc  
-clean:
-	rm $(OBJS) $(BOOT_OBJS)
-build: $(BUILD)/kernel.bin $(BOOT_OBJS)
+		bs=512 count=200 seek=9 conv=notrunc
 
-.PHONY: all
 $(BOOT)/loader.bin: $(BOOT)/loader.S
 	$(AS) $(ASLIB) $< -o $@
 $(BOOT)/mbr.bin: $(BOOT)/mbr.S
 	$(AS) $(ASLIB) $< -o $@
+
+$(BUILD)/thread.o:thread/thread.c
+	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD)/string.o:lib/string.c lib/string.h kernel/global.h kernel/debug.h
 	$(CC) $(CFLAGS) $< -o $@
