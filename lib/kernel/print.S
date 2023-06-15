@@ -107,7 +107,6 @@ put_char:
 	loop .cls
 	mov bx,1920				
  .set_cursor:
-					
 	mov dx, 0x03d4			
 	mov al, 0x0e				
 	out dx, al
@@ -124,7 +123,6 @@ put_char:
  .put_char_done:
 	popad
 	ret
-
 
 global put_int
 put_int:
@@ -175,5 +173,23 @@ put_int:
 	mov cl, [put_int_buffer+edi]	
 	cmp edi,8
 	jl .put_each_num
+	popad
+	ret
+
+global set_cursor
+set_cursor:
+	mov dx, 0x03d4			
+	mov al, 0x0e				
+	out dx, al
+	mov dx, 0x03d5			
+	mov al, bh
+	out dx, al
+
+	mov dx, 0x03d4
+	mov al, 0x0f
+	out dx, al
+	mov dx, 0x03d5
+	mov al, bl
+	out dx, al
 	popad
 	ret

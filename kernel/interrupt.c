@@ -8,9 +8,13 @@
 #define PIC_M_DATA 0x21
 #define PIC_S_CTRL 0xa0
 #define PIC_S_DATA 0xa1
+
 #define IDT_DESC_CNT 0x21
+
 #define EFLAGS_IF 0x00000200
 #define GET_EFLAGS(EFLAG_VAR) asm volatile("pushfl; popl %0" : "=g" (EFLAG_VAR))
+
+extern void set_cursor(uint32_t);
 
 struct gate_desc {
 	uint16_t    func_offset_low_word;
@@ -22,7 +26,7 @@ struct gate_desc {
 
 static void make_idt_desc(struct gate_desc* p_gdesc, uint8_t attr, intr_handler function);
 static struct gate_desc idt[IDT_DESC_CNT];
-char * intr_name[IDT_DESC_CNT];
+char *intr_name[IDT_DESC_CNT];
 intr_handler idt_table[IDT_DESC_CNT];
 extern intr_handler intr_entry_table[IDT_DESC_CNT];
 
@@ -56,23 +60,27 @@ static void idt_desc_init(void) {
 	put_str("   idt_desc_init done\n");
 }
 
-static uint8_t count = 0;
-static const int T_approx = 100;
-static int times = T_approx;
 static void general_intr_handler(uint8_t vec_nr) {
-	if (times != 0) {
-		times--;
+	if (vec_nr == 0x27 || vec_nr == 0x2f)
 		return;
+	set_cursor(0);
+	int cursor_pos = 0;
+	while (cursor_pos < 320) {
+		put_char(' ');
+		cursor_pos++;
 	}
-	times = T_approx;
-	if (vec_nr == 0x27 || vec_nr == 0x2f) {
-		return;
+	set_cursor(0);
+	put_str("!!! exception message begin !!!\n");
+	set_cursor(88);
+	put_str(intr_name[vec_nr]);
+	if (vec_nr == 14) {
+		int page_fault_vaddr = 0;
+		asm("movl %%cr2, %0" : "=r"(page_fault_vaddr));
+		put_str("\npage fault addr is ");
+		put_int(page_fault_vaddr);
 	}
-	put_int(count);
-	count++;
-	put_str(". HCB int vector: Ox");
-	put_int(vec_nr);
-	put_char('\n');
+	put_str("\n!!! exception message end !!!\n");
+	while (1);
 }
 static void exception_init(void) {
 	int i;
@@ -95,23 +103,13 @@ static void exception_init(void) {
 	intr_name[12] = "#SS Stack Fault Exception";
 	intr_name[13] = "#GP General Protection Exception";
 	intr_name[14] = "#PF Page-Fault Exception";
+	// intr_name[15] unused
 	intr_name[16] = "#MF x87 FPU Floating-Point Error";
 	intr_name[17] = "#AC Alignment Check Exception";
 	intr_name[18] = "#MC Machine-Check Exception";
 	intr_name[19] = "#XF SIMD Floating-Point Exception";
 }
 
-void idt_init() {
-	put_str("idt_init start\n");
-	idt_desc_init();
-	exception_init();
-	pic_init();
-
-	uint64_t idt_operand = ((sizeof(idt) - 1) | \
-				((uint64_t)(uint32_t)idt << 16));
-	asm volatile("lidt %0" : : "m" (idt_operand));
-	put_str("idt_init done\n");
-}
 enum intr_status intr_enable() {
 	enum intr_status old_status;
 	if (INTR_ON == intr_get_status()) {
@@ -143,4 +141,20 @@ enum intr_status intr_get_status() {
 	uint32_t eflags = 0;
 	GET_EFLAGS(eflags);
 	return (EFLAGS_IF & eflags) ? INTR_ON : INTR_OFF;
+}
+
+void register_handler(uint8_t vector_no, intr_handler function) {
+	idt_table[vector_no] = function; 
+}
+
+void idt_init() {
+	put_str("idt_init start\n");
+	idt_desc_init();
+	exception_init();
+	pic_init();
+
+	uint64_t idt_operand = ((sizeof(idt) - 1) | \
+				((uint64_t)(uint32_t)idt << 16));
+	asm volatile("lidt %0" : : "m" (idt_operand));
+	put_str("idt_init done\n");
 }

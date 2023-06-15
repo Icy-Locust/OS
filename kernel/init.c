@@ -1,8 +1,9 @@
 #include "init.h"
 #include "print.h"
 #include "interrupt.h"
-#include "../device/timer.h"
+#include "timer.h"
 #include "memory.h"
+#include "thread.h"
 
 extern void idt_init();
 void init_all() {
@@ -10,4 +11,5 @@ void init_all() {
 	idt_init();
 	mem_init();
 	timer_init();
+	thread_init();
 }
