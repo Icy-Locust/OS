@@ -22,11 +22,13 @@ HEAD_PRINT = lib/kernel/print.h
 HEAD_STDINT = lib/stdint.h
 HEAD_STRING = lib/string.h
 HEAD_TIMER = device/timer.h
+HEAD_CONSOLE = device/console.h
 HEAD_THREAD = thread/thread.h
+HEAD_SYNC = thread/sync.h
 OBJS = $(BUILD)/main.o $(BUILD)/init.o $(BUILD)/interrupt.o $(BUILD)/kernel.o \
        $(BUILD)/print.o $(BUILD)/timer.o $(BUILD)/debug.o $(BUILD)/memory.o \
        $(BUILD)/bitmap.o $(BUILD)/string.o $(BUILD)/thread.o $(BUILD)/list.o \
-       $(BUILD)/switch.o
+       $(BUILD)/switch.o $(BUILD)/sync.o $(BUILD)/console.o
 .PHONY: all mk_dir clean build boot hd
 all: mk_dir build hd
 mk_dir:
@@ -65,10 +67,10 @@ $(BUILD)/list.o:lib/kernel/list.c $(HEAD_LIST) $(HEAD_INTERRUPT)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD)/init.o:kernel/init.c $(HEAD_INIT) $(HEAD_PRINT) $(HEAD_INTERRUPT) \
-	$(HEAD_TIMER) $(HEAD_MEMORY) $(HEAD_THREAD)
+	$(HEAD_TIMER) $(HEAD_MEMORY) $(HEAD_THREAD) $(HEAD_CONSOLE)
 	$(CC) $(CFLAGS) $< -o $@
 $(BUILD)/main.o:kernel/main.c $(HEAD_PRINT) $(HEAD_INIT) \
-	$(HEAD_MEMORY) $(HEAD_INTERRUPT)
+	$(HEAD_MEMORY) $(HEAD_INTERRUPT) $(HEAD_CONSOLE)
 	$(CC) $(CFLAGS) $< -o $@
 $(BUILD)/interrupt.o:kernel/interrupt.c $(HEAD_INTERRUPT) \
 	$(HEAD_STDINT) $(HEAD_GLOBAL) $(HEAD_IO) $(HEAD_PRINT)
@@ -83,8 +85,16 @@ $(BUILD)/memory.o:kernel/memory.c $(HEAD_MEMORY) $(HEAD_STDINT) \
 $(BUILD)/timer.o:device/timer.c $(HEAD_TIMER) $(HEAD_IO) \
 	$(HEAD_PRINT) $(HEAD_THREAD) $(HEAD_DEBUG) $(HEAD_INTERRUPT)
 	$(CC) $(CFLAGS) $< -o $@
+$(BUILD)/console.o:device/console.c $(HEAD_CONSOLE) $(HEAD_PRINT) \
+	$(HEAD_STDINT) $(HEAD_SYNC) $(HEAD_THREAD)
+	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD)/thread.o:thread/thread.c 
+$(BUILD)/thread.o:thread/thread.c $(HEAD_THREAD) $(HEAD_STDINT) \
+	$(HEAD_STRING) $(HEAD_GLOBAL) $(HEAD_MEMORY) \
+	$(HEAD_DEBUG) $(HEAD_PRINT) $(HEAD_INTERRUPT)
+	$(CC) $(CFLAGS) $< -o $@
+$(BUILD)/sync.o:thread/sync.c $(HEAD_SYNC) $(HEAD_LIST) \
+	$(HEAD_GLOBAL) $(HEAD_DEBUG) $(HEAD_INTERRUPT)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD)/kernel.bin: $(OBJS)

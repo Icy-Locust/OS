@@ -4,6 +4,7 @@
 #include "timer.h"
 #include "memory.h"
 #include "thread.h"
+#include "console.h"
 
 extern void idt_init();
 void init_all() {

@@ -1,3 +1,9 @@
+#include "sync.h"
+#include "list.h"
+#include "global.h"
+#include "debug.h"
+#include "interrupt.h"
+
 void sema_init(struct semaphore *psema, uint8_t value)
 {
 	psema->value = value;
