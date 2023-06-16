@@ -57,8 +57,6 @@ put_char:
 	jmp .put_other	
 
  .is_backspace:		
-
-
 	dec bx
 	shl bx,1
 	mov byte [gs:bx], 0x20		
@@ -178,6 +176,12 @@ put_int:
 
 global set_cursor
 set_cursor:
+	push ebp
+	mov ebp, esp
+	push eax
+	push edx
+	mov ebx, [ebp+0x8]
+
 	mov dx, 0x03d4			
 	mov al, 0x0e				
 	out dx, al
@@ -191,5 +195,9 @@ set_cursor:
 	mov dx, 0x03d5
 	mov al, bl
 	out dx, al
-	popad
+
+	pop edx
+	pop eax
+	mov esp, ebp
+	pop ebp
 	ret
