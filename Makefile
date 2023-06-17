@@ -92,7 +92,7 @@ $(BUILD)/console.o:device/console.c $(HEAD_CONSOLE) $(HEAD_PRINT) \
 	$(HEAD_STDINT) $(HEAD_SYNC) $(HEAD_THREAD)
 	$(CC) $(CFLAGS) $< -o $@
 $(BUILD)/keyboard.o:device/keyboard.c $(HEAD_KEYBOARD) $(HEAD_PRINT) \
-	$(HEAD_INTERRUPT) $(HEAD_IO) $(HEAD_GLOBAL)
+	$(HEAD_INTERRUPT) $(HEAD_IO) $(HEAD_GLOBAL) $(HEAD_IOQUEUE)
 	$(CC) $(CFLAGS) $< -o $@
 $(BUILD)/ioqueue.o:device/ioqueue.c $(HEAD_IOQUEUE) $(HEAD_INTERRUPT) \
 	$(HEAD_GLOBAL) $(HEAD_DEBUG)
