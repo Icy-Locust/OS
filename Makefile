@@ -23,12 +23,14 @@ HEAD_STDINT = lib/stdint.h
 HEAD_STRING = lib/string.h
 HEAD_TIMER = device/timer.h
 HEAD_CONSOLE = device/console.h
+HEAD_KEYBOARD = device/keyboard.h
 HEAD_THREAD = thread/thread.h
 HEAD_SYNC = thread/sync.h
 OBJS = $(BUILD)/main.o $(BUILD)/init.o $(BUILD)/interrupt.o $(BUILD)/kernel.o \
        $(BUILD)/print.o $(BUILD)/timer.o $(BUILD)/debug.o $(BUILD)/memory.o \
        $(BUILD)/bitmap.o $(BUILD)/string.o $(BUILD)/thread.o $(BUILD)/list.o \
-       $(BUILD)/switch.o $(BUILD)/sync.o $(BUILD)/console.o
+       $(BUILD)/switch.o $(BUILD)/sync.o $(BUILD)/console.o \
+       $(BUILD)/keyboard.o
 .PHONY: all mk_dir clean build boot hd
 all: mk_dir build hd
 mk_dir:
@@ -87,6 +89,9 @@ $(BUILD)/timer.o:device/timer.c $(HEAD_TIMER) $(HEAD_IO) \
 	$(CC) $(CFLAGS) $< -o $@
 $(BUILD)/console.o:device/console.c $(HEAD_CONSOLE) $(HEAD_PRINT) \
 	$(HEAD_STDINT) $(HEAD_SYNC) $(HEAD_THREAD)
+	$(CC) $(CFLAGS) $< -o $@
+$(BUILD)/keyboard.o:device/keyboard.c $(HEAD_KEYBOARD) $(HEAD_PRINT) \
+	$(HEAD_INTERRUPT) $(HEAD_IO) $(HEAD_GLOBAL)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD)/thread.o:thread/thread.c $(HEAD_THREAD) $(HEAD_STDINT) \

@@ -14,8 +14,6 @@
 #define READ_WRITE_LATCH   3
 #define PIT_CONTROL_PORT   0x43
 
-extern void register_handler(uint8_t vector_no, intr_handler function);
-
 uint32_t ticks;
 static void frequency_set(uint8_t counter_port, \
 			  uint8_t counter_no, \
